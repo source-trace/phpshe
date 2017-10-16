@@ -1,13 +1,13 @@
 <?php
 /**
- * @copyright   2008-2012 简好技术 <http://www.phpshe.com>
+ * @copyright   2008-2015 简好网络 <http://www.phpshe.com>
  * @creatdate   2012-0501 koyshe <koyshe@gmail.com>
  */
 switch ($act) {
 	//#####################@ 管理员退出 @#####################//
 	case 'logout':
 		unset($_SESSION['admin_idtoken'], $_SESSION['admin_id'], $_SESSION['admin_name']);
-		pe_success('管理员退出成功！', 'admin.php');
+		pe_success('退出成功！', 'admin.php');
 	break;
 	//#####################@ 管理员登录 @#####################//
 	default:
@@ -20,7 +20,8 @@ switch ($act) {
 				$_SESSION['admin_idtoken'] = md5($info['admin_id'].$pe['host_root']);
 				$_SESSION['admin_id'] = $info['admin_id'];
 				$_SESSION['admin_name'] = $info['admin_name'];
-				pe_success('管理员登录成功！', 'admin.php');
+				$_SESSION['pe_token'] = pe_token_set($_SESSION['admin_idtoken']);
+				pe_success('登录成功！', 'admin.php');
 			}
 			else {
 				pe_error('用户名或密码错误...');

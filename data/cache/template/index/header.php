@@ -5,82 +5,98 @@
 <title><?php echo $seo['title'] ?></title>
 <meta name="keywords" content="<?php echo $seo['keywords'] ?>" />
 <meta name="description" content="<?php echo $seo['description'] ?>" />
+<link rel="shortcut icon" type="image/ico" href="<?php echo $pe['host_root'] ?>favicon.ico">
 <link type="text/css" rel="stylesheet" href="<?php echo $pe['host_tpl'] ?>css/style.css" />
 <script type="text/javascript" src="<?php echo $pe['host_root'] ?>include/js/jquery.js"></script>
 <script type="text/javascript" src="<?php echo $pe['host_root'] ?>include/js/global.js"></script>
+<script type="text/javascript" src="<?php echo $pe['host_root'] ?>include/js/arttpl.js"></script>
+<script type="text/javascript" src="<?php echo $pe['host_root'] ?>include/plugin/layer/layer.js"></script>
 </head>
 <body>
-<div class="pagetop">
-	<div class="quick_menu">
-		<p>
-		<?php if(pe_login('user')):?>
-		<span class="fl">您好，<span class="cred"><?php echo $_s_user_name ?></span>， <?php echo $cache_setting['web_title']['setting_value'] ?>！</span>
-		<span class="fr">
-		<a href="<?php echo $pe['host_root'] ?>index.php?mod=user&act=order" title="会员中心">会员中心</a>
-		<a href="<?php echo $pe['host_root'] ?>index.php?mod=order&act=add" title="购物车" class="gwc">购物车 <span class="cred"><?php echo $cart_num ?></span> 件</a>
-		<?php if($cache_setting['web_weibo']['setting_value']):?>
-		<a href="<?php echo $cache_setting['web_weibo']['setting_value'] ?>" title="官方微博" target="_blank">官方微博</a>
-		<?php else:?>
-		<a href="<?php echo pe_url('order-list') ?>" title="订单查询">订单查询</a>
-		<a href="<?php echo pe_url('user-logout') ?>" title="退出" style="border:0">退出</a>
-		</span>
-		<?php endif;?>
-		<?php else:?>
-		<span class="fl">您好，欢迎来到<?php echo $cache_setting['web_title']['setting_value'] ?>！</span>
-		<span class="fr">
-		<a href="<?php echo pe_url('user-login',pe_fromto()) ?>" title="登录">登录</a>
-		<a href="<?php echo pe_url('user-register',pe_fromto()) ?>" title="注册">注册</a>
-		<?php if($cache_setting['web_weibo']['setting_value']):?>
-		<a href="<?php echo $cache_setting['web_weibo']['setting_value'] ?>" title="官方微博" target="_blank">官方微博</a>
-		<?php endif;?>
-		<a href="<?php echo $pe['host_root'] ?>index.php?mod=order&act=add" title="购物车" class="gwc">购物车 <span class="cred"><?php echo $cart_num ?></span> 件</a>
-		<a href="<?php echo pe_url('order-list') ?>" title="订单查询" style="border:0">订单查询</a>
-		</span>
-		<?php endif;?>
-		</p>
-	</div>
+<div class="quick_menu">
 	<div class="width980">
-		<div class="header">
-			<div class="fl logo"><a href="<?php echo $pe['host_root'] ?>" title="<?php echo $cache_setting['web_name']['setting_value'] ?>"><img src="<?php echo pe_thumb($cache_setting['web_logo']['setting_value']) ?>" alt="<?php echo $cache_setting['web_name']['setting_value'] ?>" /></a></div>
-			<div class="sear fl">				
-				<form method="get" action="<?php echo pe_url('product-list') ?>">
-				<div class="inputbg fl"><input type="text" name="keyword" value="<?php echo $_g_keyword ?>" class="fl searinput c666" /></div>
-				<input type="submit" class="fl sear_btn" onclick="this.form.submit();return false;" value="搜索" />
-				</form>
+		<span class="fl">欢迎来到<?php echo $cache_setting['web_title'] ?>！</span>
+		<div class="fr top_r">
+			<?php if(pe_login('user')):?>
+			您好：<a href="<?php echo $pe['host_root'] ?>user.php" style="color:#DF002F;padding:0;border:0"><?php echo $_s_user_name ?></a>
+			<a href="<?php echo $pe['host_root'] ?>user.php?mod=do&act=logout" title="退出" style="padding-left:0;color:#999">[退出]</a>
+			<?php else:?>
+			<a href="<?php echo $pe['host_root'] ?>user.php?mod=do&act=login&<?php echo pe_fromto() ?>" title="登录">登录</a>
+			<a href="<?php echo $pe['host_root'] ?>user.php?mod=do&act=register&<?php echo pe_fromto() ?>" title="注册">免费注册</a>
+			<?php endif;?>
+			<a href="<?php echo $pe['host_root'] ?>user.php?mod=order" title="我的订单" class="scj">我的订单</a>
+			<a href="<?php echo pe_url('article-news') ?>" title="资讯中心">资讯中心</a>
+			<a href="<?php echo pe_url('article-help') ?>" title="帮助中心" style="border-right:0;">帮助中心</a>
+		</div>
+		<div class="clear"></div>
+	</div>
+</div>
+<div class="width980">
+<?php echo ad_show('header') ?>
+<?php if($mod=='index'):?><?php echo ad_show('index_header') ?><?php endif;?>
+</div>
+<div style="background:#fff; padding-bottom:20px;">
+<div class="width980">
+	<div class="header">
+		<div class="fl logo"><a href="<?php echo $pe['host_root'] ?>" title="<?php echo $cache_setting['web_name'] ?>"><img src="<?php echo pe_thumb($cache_setting['web_logo']) ?>" alt="<?php echo $cache_setting['web_name'] ?>" /></a></div>
+		<div class="head_gwc"><a href="<?php echo pe_url('cart') ?>"><div class="head_gwc_tb">购物车 <span id="cart_num" class="num cred"><?php echo user_cartnum() ?></span> 件　 ></div></a></div>
+		<!--<p class="top_tel fr"><?php echo $cache_setting['web_phone'] ?></p>-->
+		<div class="sear fr">				
+			<form method="get" action="<?php echo $pe['host_root'] ?>index.php">
+			<input type="hidden" name="mod" value="product" />
+			<input type="hidden" name="act" value="list" />
+			<?php if($_g_sel):?><input type="hidden" name="sel" value="<?php echo htmlspecialchars($_g_sel) ?>" /><?php endif;?>
+			<div class="inputbg fl"><input type="text" name="keyword" value="<?php echo htmlspecialchars($_g_keyword) ?>" class="fl searinput c666" /></div>
+			<input type="submit" class="fl sear_btn" onclick="this.form.submit();return false;" value="搜 索" />
+			</form>
+			<div class="clear"></div>
+			<div class="mat5 head_hot">
+			<?php foreach(explode(',', $cache_setting['web_hotword']) as $v):?>
+			<a href="<?php echo $pe['host_root'] ?>index.php?mod=product&act=list&keyword=<?php echo $v ?>" title="<?php echo $v ?>" target="_blank" class="mar5 c666"><?php echo $v ?></a>
+			<?php endforeach;?>
 			</div>
-			<p class="top_tel fr">咨询热线：<?php echo $cache_setting['web_phone']['setting_value'] ?></p>
 		</div>
 	</div>
 	<div class="clear"></div>
-	<div class="nav">
-		<ul>
-			<li class="sel"><a href="<?php echo $pe['host_root'] ?>" title="首页">首页</a></li>
-			<?php foreach((array)$cache_category_arr[0] as $v):?>
-			<li><a href="<?php echo pe_url('product-list-'.$v['category_id']) ?>"><?php echo $v['category_name'] ?></a></li>
-			<?php endforeach;?>
-		</ul>
-	</div>
-	<div class="clear"></div>
 </div>
-<?php if($mod=='index' && is_array($cache_ad['index_header'])):?>
-<?php foreach($cache_ad['index_header'] as $v):?>
-<div class="ad980">
-<?php if($v['ad_url']):?>
-<a href="<?php echo $v['ad_url'] ?>" target="_blank"><img src="<?php echo pe_thumb($v['ad_logo']) ?>" /></a>
-<?php else:?>
-<img src="<?php echo pe_thumb($v['ad_logo']) ?>" />
-<?php endif;?>
 </div>
-<?php endforeach;?>
-<?php endif;?>
-<?php if(is_array($cache_ad['header'])):?>
-<?php foreach($cache_ad['header'] as $v):?>
-<div class="ad980">
-<?php if($v['ad_url']):?>
-<a href="<?php echo $v['ad_url'] ?>" target="_blank"><img src="<?php echo pe_thumb($v['ad_logo']) ?>" /></a>
-<?php else:?>
-<img src="<?php echo pe_thumb($v['ad_logo']) ?>" />
-<?php endif;?>
+<div class="clear"></div>
+<div class="nav">
+	<ul>
+	<li class="sel" style="width:228px; position:relative;z-index:999" id="menu_nav">
+		<h3 class="all"><a><span></span>全部商品</a></h3>
+		<div id="menu_html" <?php if($mod!='index'):?>style="display:none"<?php endif;?>>
+			<div class="fl_index">
+				<?php foreach((array)$cache_category_arr[0] as $k=>$v):?>
+				<?php $i++;?>
+				<div class="fenlei_li <?php if($i>9):?>fenlei_li_more<?php endif;?>">
+					<div class="fenlei_h3">
+						<a href="<?php echo pe_url('product-list-'.$k) ?>" title="<?php echo $v['category_name'] ?>" class="i<?php echo $i ?>" <?php if($i==8):?>style="border-bottom:0"<?php endif;?>><?php echo $v['category_name'] ?></a>
+						<i class="b_right"></i>
+					</div>
+					<div class="js_right" style="display:none;">
+						<?php foreach((array)$cache_category_arr[$k] as $kk=>$vv):?>
+						<div class="fl_s">
+							<div class="fl fl_s1"><a href="<?php echo pe_url('product-list-'.$kk) ?>" title="<?php echo $vv['category_name'] ?>"><strong><?php echo $vv['category_name'] ?></strong> ></a></div>
+							<div class="fl fl_s2">
+								<?php foreach((array)$cache_category_arr[$kk] as $kkk=>$vvv):?>
+								<a href="<?php echo pe_url('product-list-'.$kkk) ?>" title="<?php echo $vvv['category_name'] ?>">|<span><?php echo $vvv['category_name'] ?></span></a>
+								<?php endforeach;?>
+								<div class="clear"></div>
+							</div>
+							<div class="clear"></div>
+						</div>
+						<?php endforeach;?>
+					</div>
+				</div>
+				<?php endforeach;?>
+			</div>
+		</div>
+	</li>
+	<li><h3><a href="<?php echo $pe['host_root'] ?>" title="首页">首页</a></h3></li>
+	<?php foreach((array)$cache_menu as $v):?>
+	<li><h3><a href="<?php echo $v['menu_url'] ?>" title="<?php echo $v['menu_name'] ?>" <?php echo $v['menu_target'] ?>><?php echo $v['menu_name'] ?></a></h3></li>
+	<?php endforeach;?>
+	</ul>
 </div>
-<?php endforeach;?>
-<?php endif;?>
+<div class="clear"></div>

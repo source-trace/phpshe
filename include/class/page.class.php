@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   2008-2012 简好技术 <http://www.phpshe.com>
+ * @copyright   2008-2015 简好网络 <http://www.phpshe.com>
  * @creatdate   2010-1001 koyshe <koyshe@gmail.com>
  */
 //分页类
@@ -16,15 +16,15 @@ class page {
 	//构造函数初始化类设置
 	function __construct($allnum, $page = null, $listnum = null, $pagenum = null) 
 	{
+		global $pe;
 		$this->listnums = $allnum;
-		$this->page = $page === null ? 1 : $page;
-		$this->listnum = $listnum === null ? 20 : $listnum;
-		$this->pagenum = $pagenum === null ? 10 : $pagenum;
-
+		$this->page = $page === null ? 1 : intval($page);
+		$this->listnum = $listnum === null ? 20 : intval($listnum);
+		$this->pagenum = $pagenum === null ? 10 : intval($pagenum);
 		$this->pagenums = ceil($this->listnums / $this->listnum);
 		
 		$this->limit = $this->get_limit();
-		$this->html = $this->getpagelisthtml();
+		$this->html = $pe['mobile'] ? $this->getpagelisthtml_m() : $this->getpagelisthtml();
 	}
 	//获取sql中limit函数的开始指针位置
 	function get_limit()
@@ -70,26 +70,49 @@ class page {
 	//获取翻页块带html的列表
 	function getpagelisthtml()
 	{
-		global $phpshe;
 		if (count($this->get_pagelist()) > 1) {
 			$url = pe_updateurl('page',1);				
-			$pagelisthtml = "<ul class='fr'><li><a href='{$url}'>首页</a></li>";
+			$pagelisthtml = "<a href='{$url}'>首页</a>";
 			foreach ($this->get_pagelist() as $k => $v) {
 				$url = pe_updateurl('page', $v);
-				$pagelisthtml .= ($this->page == $v) ? "<li><a href='{$url}' class='sel'>{$v}</a></li>" : "<li><a href='{$url}'>{$v}</a></li>";	
+				$pagelisthtml .= ($this->page == $v) ? "<a href='{$url}' class='sel'>{$v}</a>" : "<a href='{$url}'>{$v}</a>";	
 			}
 			$url = pe_updateurl('page', $this->pagenums);
-			$pagelisthtml .= "<li><a href='{$url}'>末页</a></li></ul>";
+			$pagelisthtml .= "<a href='{$url}'>末页</a>";
 $pagelisthtml .=<<<html
 <style type="text/css">
-.fenye li{float:left; font-family:Arial, Helvetica, sans-serif; margin-left:6px; display:inline; line-height:24px;}
-.fenye a{border:1px #C2D5E3 solid; padding:0 8px; color:#0066CC; background:#fff; float:left;  height:24px;}
-.fenye a:hover{background:#fff5f5; border:1px #76a5c8 solid;}
-.fenye .sel{background:#E5EDF2; color:#333; font-weight:bold; border:1px #C2D5E3 solid;  padding:0 8px;}
+.fenye{text-align:right;}
+.fenye a{border:1px #ccc solid; padding:0 10px; border-radius:2px; color:#666; background:#fff;display:inline-block;  height:24px; line-height:24px; font-weight:normal; margin-left:3px;}
+.fenye a:hover,.fenye .sel{background:#1DABDF; color:#fff; border:1px #0D95C7 solid;  padding:0 10px;}
+.fenye .sel{ font-weight:bold;}
 </style>
 html;
 			return $pagelisthtml;
 		}
+	}
+	//获取翻页块带html的列表(手机版)
+	function getpagelisthtml_m()
+	{
+		if (count($this->get_pagelist()) > 1) {
+			$url = $this->page <= 1 ? "javascript:;" : pe_updateurl('page', $this->page-1);
+			$pagelisthtml = "<a href='{$url}'><span>上一页</span></a>";
+			$pagelisthtml .= "<span class='fy_m'>{$this->page} / {$this->pagenums}</span>";
+			$url = $this->page >= $this->pagenums ? "javascript:;" : pe_updateurl('page', $this->page+1);
+			$pagelisthtml .= "<a href='{$url}'><span>下一页</span></a>";
+$pagelisthtml .=<<<html
+<style type="text/css">
+.fenye{text-align:center; margin-top:10px; padding:0 10px;}
+.fenye a{width:34%; text-align:center; border-radius:4px; border:1px #ddd solid; color:#666; background:#fff; display:inline-block; font-weight:normal;}
+.fenye a span{display:inline-block; width:100%; height:32px; line-height:32px; color:#666;}
+.fenye .fy_m{width:30%; display:inline-block; color:#888;}
+</style>
+html;
+			return $pagelisthtml;
+		}
+	}
+	//ajax模式分页
+	function ajax($func_name = 'page_ajax') {
+		return preg_replace("|href='[^']*page=(\d+)[^']*'|", "href='javascript:{$func_name}($1);'", $this->html);
 	}
 }
 ?>

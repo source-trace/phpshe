@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright   2008-2015 简好网络 <http://www.phpshe.com>
+ * @creatdate   2010-1001 koyshe <koyshe@gmail.com>
+ */
 //#####################@ 无限级分类父子类-20120314-koyshe @#####################//
 class category {
 	private $field;//分类字段名
@@ -18,8 +22,8 @@ class category {
 			if ($v[$this->field['pid']] == $pid) {
 				//前三级前导符号
 				$level == 1 && $v[$this->field['showname']] = "{$v[$this->field['name']]}";
-				$level == 2 && $v[$this->field['showname']] = "　 ┝ {$v[$this->field['name']]}";
-				$level >= 3 && $v[$this->field['showname']] = '　 '.str_repeat('　　', $level - 2)."┝ {$v[$this->field['name']]}";
+				$level == 2 && $v[$this->field['showname']] = "　 ├ {$v[$this->field['name']]}";
+				$level >= 3 && $v[$this->field['showname']] = '　 '.str_repeat('　　', $level - 2)."├ {$v[$this->field['name']]}";
 				$this->tree[] = $v;
 				$this->gettree($data, $v[$this->field['id']], $level+1);
 			}
@@ -58,7 +62,7 @@ class category {
 		!$this->tempvar && $this->tempvar = array();
 		foreach ($data as $v) {
 			if ($v[$this->field['pid']] == $pid) {
-				$this->tempvar[] = $v[$this->field['id']];
+				$this->tempvar[] = intval($v[$this->field['id']]);
 				$this->getcid_arr($data, $v[$this->field['id']], 0);
 			}
 			else {

@@ -1,5 +1,5 @@
 /**
- * @copyright   2008-2012 简好技术 <http://www.phpshe.com>
+ * @copyright   2008-2015 简好网络 <http://www.phpshe.com>
  * @creatdate   2010-1001 koyshe <koyshe@gmail.com>
  */
 (function($){
@@ -8,14 +8,15 @@ function js_length(str) {
     return str.replace(/[^\x00-\xff]/g,"aaa").length;
 };
 //定制常用正则
-var rule_phone = /^((1[0-9]{10})|([0-9-]{7,12}))$/;
-var rule_qq = /^[0-9]{5,12}$/;
+//var rule_phone = /^((1[0-9]{10})|([0-9-]{7,12}))$/;
+var rule_phone = /^1[0-9]{10}$/;
+var rule_qq = /^[0-9]{5,15}$/;
 var rule_email = /^[-_A-Za-z0-9]+@([_A-Za-z0-9]+\.)+[a-z]{2,3}$/;
 var rule_zh = /^[\u4e00-\u9fa5]+$/;
 var rule_idcard = /^([1-9][0-9]{14})|([1-9][0-9]{17})$/;
 function _success(_this, show_id, show_icon) {
 	_this.attr("pe_result", "true");
-	_this.css("border","")
+	_this.css("background-color","#fff")
 	if (typeof(show_icon) == 'undefined') {
 		$("#" + show_id).empty();
 	}
@@ -25,7 +26,7 @@ function _success(_this, show_id, show_icon) {
 }
 function _error(_this, show_id, show_text) {
 	_this.attr("pe_result", "false");
-	_this.css("border","1px solid #e3051c");
+	_this.css("background-color","#ffdbdb");
 	$("#" + show_id).html('<span style="color:#e3051c;">'+show_text+'</span>');
 }
 //比较数字大小或比较字符串长短（内部调用）
