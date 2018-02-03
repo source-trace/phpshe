@@ -343,13 +343,10 @@ function pe_confirm(show, func) {
 }
 
 //ajax表单post提交
-function pe_submit(url, func, id) {
-	var form_id = typeof(id) == 'undefined' ? 'form' : id;
-	$.post(url, $("#"+form_id).serialize(), function(json){
+function pe_submit(url, func) {
+	$.post(url, $("#form").serialize(), function(json){
     	if (json.show != '') pe_tip(json.show);
-    	if (func && typeof(func) == "function") {
-    		func(json);
-    	}
+    	func(json);
 	}, "json");
 }
 

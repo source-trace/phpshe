@@ -1,5 +1,6 @@
 /*jQzoom插件*/  
 .jqzoom{  
+    border:1px solid #ddd;  
     float:left;  
     position:relative;  
     padding:0px;  
